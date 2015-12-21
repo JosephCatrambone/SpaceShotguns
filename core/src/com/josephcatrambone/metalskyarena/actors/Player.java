@@ -3,10 +3,9 @@ package com.josephcatrambone.metalskyarena.actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.josephcatrambone.metalskyarena.MainGame;
 
 import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
@@ -18,13 +17,14 @@ public class Player extends Actor {
 	public enum State {IDLE, SHOOT, HIT, DEAD, NUM_STATES};
 
 	// Gameplay
-
+	float weaponForce = 100;
+	int ammo = 10;
 
 	// Sounds
 
 
 	// Animation
-	private final String SPRITE_SHEET_FILENAME = "player.png";
+	public final String SPRITE_SHEET_FILENAME = "missing.png";
 	Texture spriteSheet; // Don't use Image subclass or Sprite.
 	Animation[] animations;
 
@@ -43,6 +43,10 @@ public class Player extends Actor {
 		// Load graphics.
 		spriteSheet = MainGame.assetManager.get(SPRITE_SHEET_FILENAME);
 
+		// Set game state.
+		weaponForce = 10;
+		state = State.IDLE;
+
 		// Create visible bounds.
 
 
@@ -53,28 +57,22 @@ public class Player extends Actor {
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		physicsBody = world.createBody(bdef);
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(PLAYER_HALFWIDTH, PLAYER_HALFHEIGHT);
+		shape.setAsBox(PLAYER_HALFWIDTH/PPM, PLAYER_HALFHEIGHT/PPM);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = shape;
 		physicsBody.createFixture(fdef);
-
-		// Handle input.
-		setupInput();
 	}
 
-	public void setupInput() {
-		// This is overridden by the network player.
-		// TODO: Add this to screen instead.
-		this.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("down");
-				return true;
-			}
+	public void handleTouchDown(float x, float y, int button) {
 
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				//System.out.println("up");
-			}
-		});
+	}
+
+	public void handleTouchUp(float x, float y, int button) {
+		Vector2 pos = physicsBody.getPosition().cpy();
+		pos.add(-x/PPM, -y/PPM); // Assume x and y are remapped from screen to proper orientation, but convert to phys.
+		pos.nor();
+		System.out.println("Net: " + pos.x + ", " + pos.y);
+		physicsBody.applyForceToCenter(pos.scl(weaponForce), true);
 	}
 
 	public void dispose() {
@@ -89,7 +87,12 @@ public class Player extends Actor {
 
 	@Override
 	public void draw(Batch spriteBatch, float alpha) {
+		Vector2 pos = getPosition();
+		spriteBatch.draw(spriteSheet, pos.x, pos.y, 2*PLAYER_HALFWIDTH, 2*PLAYER_HALFHEIGHT);
+	}
 
+	public Vector2 getPosition() {
+		return this.physicsBody.getPosition().cpy().scl(PPM);
 	}
 
 }

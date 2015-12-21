@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         mavenCentral()
@@ -33,7 +34,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -66,7 +66,6 @@ project(":ios") {
     apply plugin: "java"
     apply plugin: "robovm"
 
-
     dependencies {
         compile project(":core")
         compile "org.robovm:robovm-rt:$roboVMVersion"
@@ -80,6 +79,8 @@ project(":ios") {
 project(":core") {
     apply plugin: "java"
 
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
