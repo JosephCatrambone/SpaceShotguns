@@ -48,11 +48,13 @@ public class Player extends Actor {
 		state = State.IDLE;
 
 		// Create visible bounds.
-
+		this.setBounds(0, 0, PLAYER_HALFWIDTH*2, PLAYER_HALFHEIGHT*2);
+		this.setOrigin(0.5f, 0.5f);
 
 		// Create physics body.
 		World world = MainGame.world;
 		BodyDef bdef = new BodyDef();
+		bdef.fixedRotation = true;
 		bdef.position.set(x/PPM, y/PPM);
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		physicsBody = world.createBody(bdef);
@@ -82,17 +84,16 @@ public class Player extends Actor {
 
 	@Override
 	public void act(float deltaTime) {
-
+		// Update position based on rigit body.
+		Vector2 pos = physicsBody.getPosition();
+		this.setX(pos.x*PPM);
+		this.setY(pos.y*PPM);
 	}
 
 	@Override
 	public void draw(Batch spriteBatch, float alpha) {
-		Vector2 pos = getPosition();
-		spriteBatch.draw(spriteSheet, pos.x, pos.y, 2*PLAYER_HALFWIDTH, 2*PLAYER_HALFHEIGHT);
-	}
-
-	public Vector2 getPosition() {
-		return this.physicsBody.getPosition().cpy().scl(PPM);
+		// TODO: Won't be using getWidth() forever.  Use animation frame size around origin.
+		spriteBatch.draw(spriteSheet, this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 
 }

@@ -3,8 +3,6 @@ package com.josephcatrambone.metalskyarena.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,8 +17,6 @@ public class PlayScene extends Scene {
 	Stage stage;
 	Camera camera;
 
-	Box2DDebugRenderer debugRenderer;
-
 	Player player;
 
 	@Override
@@ -29,8 +25,9 @@ public class PlayScene extends Scene {
 		//debugRenderer = new Box2DDebugRenderer();
 
 		// Setup camera.  Enforce y-up.
+		float aspectRatio = stage.getWidth()/stage.getHeight();
 		camera = stage.getCamera();
-		((OrthographicCamera)camera).setToOrtho(false, stage.getWidth(), stage.getHeight());
+		((OrthographicCamera)camera).setToOrtho(false, 120*aspectRatio, 120);
 		camera.update(true);
 
 		player = new Player(0, 0);
@@ -42,17 +39,15 @@ public class PlayScene extends Scene {
 		// We add a global input handler so the player can shoot anywhere.
 		stage.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				// Unmap touch coordinates.
-				Vector3 coords = camera.unproject(new Vector3(x, y, camera.near));
-				player.handleTouchDown(coords.x, coords.y, button);
+				// Unmap touch coordinates.  unproject assumes y-down, so we have to flip it.
+				// Stage is unprojecting the coordinates for us.
+				//Vector3 coords = camera.unproject(new Vector3(x, Gdx.graphics.getHeight()-y, camera.near), 0, 0, camera.viewportWidth, camera.viewportHeight);
+				player.handleTouchDown(x, y, button);
 				return true;
 			}
 
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("Raw x,y: " + x + "," + y);
-				Vector3 coords = camera.unproject(new Vector3(x, y, camera.near));
-				System.out.println("Unp x,y: " + coords.x + "," + coords.y);
-				player.handleTouchUp(coords.x, coords.y, button);
+				player.handleTouchUp(x, y, button);
 			}
 		});
 
@@ -76,8 +71,9 @@ public class PlayScene extends Scene {
 	public void update(float deltaTime) {
 		MainGame.world.step(deltaTime, 8, 3);
 		stage.act(deltaTime);
-		//camera.position.set(player.getPosition().scl(0.5f).sub(new Vector2(camera.viewportWidth/2, camera.viewportHeight/2)), camera.position.z); // Half way between origin and player.
-		//camera.update();
+		camera.position.set(player.getX(), player.getY(), camera.position.z);
+		//camera.position.set(player.getPosition().sub(new Vector2(camera.viewportWidth/2, camera.viewportHeight/2)), camera.position.z); // Half way between origin and player.
+		camera.update();
 	}
 
 }
