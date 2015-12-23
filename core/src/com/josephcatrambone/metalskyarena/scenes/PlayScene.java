@@ -57,13 +57,6 @@ public class PlayScene extends Scene {
 
 		// TODO: When resuming, restore input processors.
 		Gdx.input.setInputProcessor(stage);
-
-		// Load map.
-		/*
-		TiledMap tm = new TmxMapLoader().load("test.tmx");
-		TiledMapRenderer tmr = new OrthogonalTiledMapRenderer(tm);
-		TiledMapTileLayer mapLayer = (TiledMapTileLayer)tm.getLayers().get(0);
-		*/
 	}
 
 	@Override
