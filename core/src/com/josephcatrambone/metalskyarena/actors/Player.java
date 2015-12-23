@@ -51,7 +51,7 @@ public class Player extends Actor {
 		// Create visible bounds.
 		this.setPosition(x, y, Align.center);
 		this.setBounds(0, 0, PLAYER_HALFWIDTH*2, PLAYER_HALFHEIGHT*2);
-		this.setOrigin(0.5f, 0.5f);
+		this.setOrigin(Align.center);
 
 		// Create physics body.
 		World world = MainGame.world;
@@ -95,7 +95,7 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch spriteBatch, float alpha) {
 		// TODO: Won't be using getWidth() forever.  Use animation frame size around origin.
-		spriteBatch.draw(spriteSheet, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		spriteBatch.draw(spriteSheet, this.getX()-this.getOriginX(), this.getY()-this.getOriginY(), this.getWidth(), this.getHeight());
 	}
 
 }

@@ -16,6 +16,7 @@ import com.josephcatrambone.metalskyarena.actors.Player;
  * Created by Jo on 12/20/2015.
  */
 public class PlayScene extends Scene {
+	public final int PIXEL_DISPLAY_WIDTH = 160; // Ten pixels on a side?
 	Stage stage;
 	Camera camera;
 	Level level;
@@ -29,9 +30,9 @@ public class PlayScene extends Scene {
 		debugRenderer = new Box2DDebugRenderer();
 
 		// Setup camera.  Enforce y-up.
-		float aspectRatio = stage.getWidth()/stage.getHeight();
+		float invAspectRatio = stage.getHeight()/stage.getWidth();
 		camera = stage.getCamera();
-		((OrthographicCamera)camera).setToOrtho(false, 120*aspectRatio, 120);
+		((OrthographicCamera)camera).setToOrtho(false, PIXEL_DISPLAY_WIDTH, PIXEL_DISPLAY_WIDTH*invAspectRatio);
 		camera.update(true);
 
 		level = new Level("test.tmx");
@@ -70,7 +71,7 @@ public class PlayScene extends Scene {
 		Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
 		level.drawBG(camera);
 		stage.draw();
-		debugRenderer.render(MainGame.world, camera.combined);
+		//debugRenderer.render(MainGame.world, camera.combined);
 	}
 
 	@Override
