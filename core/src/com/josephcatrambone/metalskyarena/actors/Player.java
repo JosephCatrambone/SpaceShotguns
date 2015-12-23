@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Align;
 import com.josephcatrambone.metalskyarena.MainGame;
 
 import static com.josephcatrambone.metalskyarena.PhysicsConstants.PPM;
@@ -17,8 +18,8 @@ public class Player extends Actor {
 	public enum State {IDLE, SHOOT, HIT, DEAD, NUM_STATES};
 
 	// Gameplay
-	float weaponForce = 100;
-	int ammo = 10;
+	float weaponForce;
+	int ammo;
 
 	// Sounds
 
@@ -44,10 +45,11 @@ public class Player extends Actor {
 		spriteSheet = MainGame.assetManager.get(SPRITE_SHEET_FILENAME);
 
 		// Set game state.
-		weaponForce = 10;
+		weaponForce = 50;
 		state = State.IDLE;
 
 		// Create visible bounds.
+		this.setPosition(x, y, Align.center);
 		this.setBounds(0, 0, PLAYER_HALFWIDTH*2, PLAYER_HALFHEIGHT*2);
 		this.setOrigin(0.5f, 0.5f);
 
