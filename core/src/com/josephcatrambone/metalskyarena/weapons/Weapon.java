@@ -52,7 +52,7 @@ public class Weapon {
 		}
 	}
 
-	public void shoot(float x, float y) {
+	public void shoot(float sceneX, float sceneY) {
 		if(this.owner == null) {
 			// TODO: Log error.
 			return;
@@ -70,8 +70,8 @@ public class Weapon {
 		// X and Y are relative to the background scene here.
 		// The player is also relative to the scene, so we have to kinda' hack it and project player to game coords,
 		// subtract click coords, and project back to phys coords.
-		x -= owner.getX();
-		y -= owner.getY();
+		float x = sceneX - (owner.getX()-owner.getOriginX());
+		float y = sceneY - (owner.getY()-owner.getOriginY());
 
 		float invMag = 1.0f/(float)Math.sqrt(x*x + y*y);
 
