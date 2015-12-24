@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.josephcatrambone.metalskyarena.MainGame;
 import com.josephcatrambone.metalskyarena.Level;
-import com.josephcatrambone.metalskyarena.actors.Player;
+import com.josephcatrambone.metalskyarena.actors.*;
 
 /**
  * Created by Jo on 12/20/2015.
@@ -37,11 +37,10 @@ public class PlayScene extends Scene {
 
 		level = new Level("test.tmx");
 
-		player = new Player(0, 0);
+		player = new Player(128, 128);
 		stage.addActor(player);
-		stage.addActor(new Player(25, 0));
-		stage.addActor(new Player(0, 25));
-		stage.addActor(new Player(-25, -25));
+		stage.addActor(new Pawn(125, 100));
+		stage.addActor(new Pawn(100, 256));
 
 		// We add a global input handler so the player can shoot anywhere.
 		stage.addListener(new InputListener() {
